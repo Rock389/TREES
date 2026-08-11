@@ -1,63 +1,62 @@
 $once$
 trunk = {}; branches ={}; leaves = {}
 
-trunk["blocks"] = {blocks.stripped_spruce_wood, blocks.mangrove_wood}
-trunk["outside_blocks"] = {blocks.mud_brick_wall, blocks.spruce_fence}
-branches["blocks"] = {blocks.stripped_spruce_wood, blocks.mangrove_wood}
-branches["outside_blocks"] = {blocks.mud_brick_wall, blocks.spruce_fence}
-leaves["blocks"] = {blocks.spruce_leaves, blocks.birch_leaves}
-c2 = withBlockProperty(blocks.brown_candle, "candles=2")
-leaves["outside_blocks"] = {blocks.short_grass, blocks.brown_candle, c2}
-oriented_blocks = {blocks.mud_brick_wall, blocks.spruce_fence}
+trunk["blocks"] = {blocks.oak_wood, blocks.stripped_spruce_wood}
+trunk["outside_blocks"] = {blocks.oak_fence}
+branches["blocks"] = {blocks.oak_wood, blocks.stripped_spruce_wood}
+branches["outside_blocks"] = {blocks.oak_fence}
+leaves["blocks"] = {blocks.oak_leaves,blocks.birch_leaves,blocks.dark_oak_leaves}
+leaves["outside_blocks"] = {blocks.azalea_leaves, blocks.short_grass, blocks.brown_candle}
+oriented_blocks = {blocks.oak_fence}
 
 trunk["count"] = {1, 1}
 trunk["algorithm"] = 2      -- от 1 до 2
 branches["algorithm"] = 2      --от 1 до 2
-branches["curve_algorithm"] = 1      --от 1 до 2
+branches["curve_algorithm"] = 2      --от 1 до 2
 branches["convexity"] = 1      --от 1 ло 3
-branches["branching_count"] = {0, 0}
+branches["branching_count"] = {1, 5}
 branches["branching_length_coef"] = {0.4, 0.8}
 branches["compression"] = 1.0
 leaves["start_y"] = -100
 leaves["end_y"] = 100
-leaves["compression"] = 1.5 
-leaves["start_x%"] = 70
-leaves["algorithm"] = 5    -- от 1 до 6
+leaves["compression"] = 3.0
+leaves["start_x%"] = 30
+leaves["algorithm"] = 5     -- от 1 до 6
 leaves["quality"] = 10      --от 1 до 10
 
-branches["vertical_branches_count_per_branch"] = {0, 2}
+branches["vertical_branches_count_per_branch"] = {0, 0}
 branches["vertical_branches_length"] = {1, 2}
 branches["vertical_branches_blocks"] = {blocks.oak_fence}
 
 
 
 
-trunk["min_height"] = $int(Trunk Min Height, 25, 5, 100)$
-trunk["max_height"] = $int(Trunk Max Height, 35, 3, 100)$
+trunk["min_height"] = $int(Trunk Min Height, 19, 5, 100)$
+trunk["max_height"] = $int(Trunk Max Height, 22, 3, 100)$
 trunk["min_curve"] = $int(Trunk Min Curve, 0, 0, 120)$
-trunk["max_curve"] = $int(Trunk Max Curve, 0, 0, 120)$
-trunk["min_width"] = $int(Trunk Min Width, 0, 0, 50)$
-trunk["max_width"] = $int(Trunk Max Width, 4, 0, 50)$
+trunk["max_curve"] = $int(Trunk Max Curve, 5, 0, 120)$
+trunk["min_width"] = $int(Trunk Min Width, 1, 0, 50)$
+trunk["max_width"] = $int(Trunk Max Width, 8, 0, 50)$
 trunk["generate_leaves"] = $int(Trunk Generate Leaves, 1, 0, 1)$
 
 
-branches["min_count"] = $int(Branches Min Count, 15, 0, 300)$
-branches["max_count"] = $int(Branches Max Count, 20, 0, 300)$
-branches["min_length"] = $int(Branches Min Length, 5, 2, 100)$
-branches["max_length"] = $int(Branches Max Length, 9, 2, 100)$
-branches["min_curve"] = $int(Branches Min Curve, 0, -90, 90)$
-branches["max_curve"] = $int(Branches Max Curve, 20, -90, 90)$
+branches["min_count"] = $int(Branches Min Count, 10, 0, 300)$
+branches["max_count"] = $int(Branches Max Count, 13, 0, 300)$
+branches["min_length"] = $int(Branches Min Length, 3, 2, 100)$
+branches["max_length"] = $int(Branches Max Length, 14, 2, 100)$
+branches["min_curve"] = $int(Branches Min Curve, 20, -90, 90)$
+branches["max_curve"] = $int(Branches Max Curve, 35, -90, 90)$
 branches["min_width"] = $int(Branches Min Width, 0, 0, 50)$
-branches["max_width"] = $int(Branches Max Width, 4, 0, 50)$
+branches["max_width"] = $int(Branches Max Width, 3, 0, 50)$
 branches["generate_leaves"] = $int(Branches Generate Leaves, 1, 0, 1)$
-branches["min_height"] = $int(Branches Min Height, 9, 0, 100)$
+branches["min_height"] = $int(Branches Min Height, 7, 0, 100)$
 
-leaves["density"] = $int(Leaves Density, 70, 0, 100)$
-leaves["outside_density"] = $int(Leaves Outside Density, 50, 0, 100)$
-leaves["min_width"] = $int(Leaves Min Width, 2, 1, 30)$
-leaves["max_width"] = $int(Leaves Max Width, 3, 1, 30)$
+leaves["density"] = $int(Leaves Density, 60, 0, 100)$
+leaves["outside_density"] = $int(Leaves Outside Density, 45, 0, 100)$
+leaves["min_width"] = $int(Leaves Min Width, 4, 1, 30)$
+leaves["max_width"] = $int(Leaves Max Width, 7, 1, 30)$
 leaves["min_start_height"] = $int(Leaves Min Start Height, 3, 0, 30)$
-leaves["max_start_height"] = $int(Leaves Max Start Height, 3, 0, 30)$
+leaves["max_start_height"] = $int(Leaves Max Start Height, 5, 0, 30)$
 
 
 -- Код начинается тут
