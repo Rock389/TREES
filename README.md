@@ -1,147 +1,147 @@
-
 # TREES 4.0.0
+[Русская версия](README.ru.md)
 
-Lua скрипт для Axiom, генерирующий гибко настраиваемые деревья.
+A Lua script for Axiom that generates highly configurable trees.
 
-**На донат:** https://www.donationalerts.com/r/rock389
+**Donate:** https://www.donationalerts.com/r/rock389
 
 > [!CAUTION]
-> **Важно:** При копировании пресета удаляйте весь уже существующий код, иначе ползунки не обновятся! (возможно, уже пофиксили в новейшей версии Аксиома, но вряд ли)
+> **Important:** When copying a preset, delete all existing code first, otherwise the sliders won't update! (may have been fixed in the latest Axiom version, but probably not)
 
-## Выбор блоков
+## Block Selection
 
-К сожалению, нельзя сделать нормальный выбор блоков через кнопки, так что придётся писать их ручками.
+Unfortunately, there's no proper way to select blocks via buttons, so you'll have to do it via code.
 
-В начале скрипта есть строчки:
+At the beginning of the script there are lines:
 
-- `trunk["blocks"] = {...}` — ствол
-- `trunk["bark_blocks"] = {...}` — блоки коры ствола
-- `trunk["outside_blocks"] = {...}` — дополнительные блоки* вокруг ствола
-- `branches["blocks"] = {...}` — ветки
-- `branches["bark_blocks"] = {...}` — блоки коры веток
-- `branches["outside_blocks"] = {...}` — дополнительные блоки* вокруг веток
-- `leaves["blocks"] = {...}` — листья
-- `leaves["outside_blocks"] = {...}` — внешний слой листьев
-- `oriented_blocks = {...}` — блоки, которые надо правильно расположить (заборы, панели, плиты, люки)
+- `trunk["blocks"] = {...}` — trunk
+- `trunk["bark_blocks"] = {...}` — trunk bark blocks
+- `trunk["outside_blocks"] = {...}` — additional blocks* around the trunk
+- `branches["blocks"] = {...}` — branches
+- `branches["bark_blocks"] = {...}` — branch bark blocks
+- `branches["outside_blocks"] = {...}` — additional blocks* around branches
+- `leaves["blocks"] = {...}` — leaves
+- `leaves["outside_blocks"] = {...}` — outer leaves layer
+- `oriented_blocks = {...}` — blocks that need proper orientation (fences, panes, slabs, trapdoors)
 
-*дополнительные блоки - это, по сути, сглаживание ствола в некоторых не случайных местах
+*additional blocks are essentially trunk smoothing in certain non-random spots
 
-Вместо `...` нужно перечислить блоки через запятую, используя `blocks.название_блока`. Пример:
+Instead of `...`, list the blocks separated by commas using `blocks.<block_name>`. Example:
 
 `trunk["blocks"] = {blocks.oak_wood, blocks.spruce_wood}`
 
-Если нужно изменить состояние блока (например, количество свечей), используйте `withBlockProperty`:
+If you need to change a block state (e.g. candle count), use `withBlockProperty`:
 
 `candle2 = withBlockProperty(blocks.brown_candle, "candles=2")`
 
 `leaves["outside_blocks"] = {candle2}`
 
-Блоки, перечисленные в `oriented_blocks`, будут автоматически соединяться с соседними (заборы и ограды, стеклянные панели, плиты, люки, таблички (wall_sign)).
+Blocks listed in `oriented_blocks` will automatically connect to adjacent blocks (fences and walls, glass panes, slabs, trapdoors, signs (wall_sign)).
 
-## Параметры
+## Parameters
 
-Часть параметров находится в коде, часть — в ползунках. Если сделать слишком много ползунков, интерфейс становится неудобным, этот баг не фиксится (разрабу мода я писал).
+Some parameters are in the code, others are sliders. If you add too many sliders, the interface becomes unusable — this bug can't be fixed (I contacted the mod's developer).
 
-**Если при спавне дерева возникает ошибка — скорее всего, у какого-то параметра минимальное значение больше максимального.**
+**If an error occurs when spawning a tree, it's most likely because some parameter has a min value greater than its max.**
 
-### Ползунковые параметры
+### Slider Parameters
 
-#### Ствол (Trunk)
+#### Trunk
 
-| Параметр | Описание |
-|----------|----------|
-| `min/max_height` | Интервал высоты ствола |
-| `min/max_curve` | Интервал угла наклона ствола (градусы) |
-| `min/max_width` | Ширина вершины и подножия (количество блоков, не радиус) |
-| `generate_leaves` | 1 — генерировать листья вокруг ствола, 0 — не генерировать |
+| Parameter | Description |
+|-----------|-------------|
+| `min/max_height` | Trunk height range |
+| `min/max_curve` | Trunk tilt angle range (degrees) |
+| `min/max_width` | Width of the top and base (block count, not radius) |
+| `generate_leaves` | 1 — generate leaves around the trunk, 0 — don't |
 
-#### Ветки (Branches)
+#### Branches
 
-| Параметр | Описание |
-|----------|----------|
-| `min/max_count` | Количество веток |
-| `min/max_length` | Длина веток |
-| `min/max_curve` | Угол наклона веток (0 — перпендикулярно, >0 — вверх, <0 — вниз) |
-| `min/max_width` | Ширина конца и начала ветки |
-| `generate_leaves` | 1 — генерировать листья вокруг веток, 0 — не генерировать |
+| Parameter | Description |
+|-----------|-------------|
+| `min/max_count` | Number of branches |
+| `min/max_length` | Branch length |
+| `min/max_curve` | Branch tilt angle (0 — perpendicular, >0 — upward, <0 — downward) |
+| `min/max_width` | Width of branch end and start |
+| `generate_leaves` | 1 — generate leaves around branches, 0 — don't |
 
-#### Листья (Leaves)
+#### Leaves
 
-| Параметр | Описание |
-|----------|----------|
-| `density` | Густота листьев (0–100%) |
-| `outside_density` | Густота внешнего слоя листьев (0–100%) |
-| `min/max_width` | Толщина листвы (радиус) |
-| `min_start_height` / `max_start_height` | Интервал минимальной высоты появления листьев (из него случайно выбирается значение) |
+| Parameter | Description |
+|-----------|-------------|
+| `density` | Leaves density (0–100%) |
+| `outside_density` | Outer leaves layer density (0–100%) |
+| `min/max_width` | Leaves thickness (radius) |
+| `min_start_height` / `max_start_height` | Range for the minimum leaf spawn height (a value is randomly picked from it) |
 
-### Параметры внутри кода
-*Параметры с фигурными скобками, например, {1, 2}, означают, что 1 - минимум, 2 - максимум*
+### In-Code Parameters
+*Parameters with curly brackets, e.g. {1, 2}, mean that 1 is min value and 2 is max value*
 
-#### Ствол (Trunk)
+#### Trunk
 
-| Параметр | Описание |
-|----------|----------|
-| `trunk["count"]` | Минимальное и максимальное количество стволов|
-| `trunk["algorithm"]` | 1 — случайный (шумный), 2 — гладкий |
-| `trunk["bark_density"]` | Плотность/частота коры ствола (0-100%)|
-| `trunk["gradient_mode"]` | 1 - включить режим градиента для блоков ствола, 0 - выключить. При включённом режиме градиента, блоки из `trunk["blocks"]` выбираются не случайно, а образуют градиент|
+| Parameter | Description |
+|-----------|-------------|
+| `trunk["count"]` | Minimum and maximum number of trunks |
+| `trunk["algorithm"]` | 1 — random (noisy), 2 — smooth |
+| `trunk["bark_density"]` | Trunk bark density/frequency (0-100%) |
+| `trunk["gradient_mode"]` | 1 — enable gradient mode for trunk blocks, 0 — disable. When gradient mode is on, blocks from `trunk["blocks"]` are not picked randomly but form a gradient |
 
-#### Ветки (Branches)
+#### Branches
 
-| Параметр | Описание |
-|----------|----------|
-| `branches["algorithm"]` | 1 — случайный, 2 — гладкий |
-| `branches["curve_algorithm"]` | 1 — синусоидальный изгиб, 2 — линейный |
-| `branches["bark_density"]` | Плотность/частота коры веток (0-100%)|
-| `branches["gradient_mode"]` | 1 - включить режим градиента для блоков веток, 0 - выключить. При включённом режиме градиента, блоки из `branches["blocks"]` выбираются не случайно, а образуют градиент|
-| `branches["convexity"]` | 1 — изгиб от ствола, 2 — к стволу, 3 — оба варианта |
-| `branches["branching_count"]` | Минимальное и максимальное количество ответвлений от одной ветки|
-| `branches["branching_length_coef"]` | Коэффициент длины ответвлений относительно длины ветки|
-| `branches["grouping"]` | Минимальный и максимальный коэффициент группировки. Для каждой ветки выбирается значение в промежутке и с этим шансом ветка появляется рядом с другой веткой |
-| `branches["compression"]` | Сжатие веток |
-| `branches["min_height"]` | Минимальная высота для появления веток |
-| `branches["max_height_coef"]` | Коэффициент максимальной высоты для появления веток в зависимости от высота ствола |
+| Parameter | Description |
+|-----------|-------------|
+| `branches["algorithm"]` | 1 — random, 2 — smooth |
+| `branches["curve_algorithm"]` | 1 — sine curve, 2 — linear |
+| `branches["bark_density"]` | Branch bark density/frequency (0-100%) |
+| `branches["gradient_mode"]` | 1 — enable gradient mode for branch blocks, 0 — disable. When gradient mode is on, blocks from `branches["blocks"]` are not picked randomly but form a gradient |
+| `branches["convexity"]` | 1 — bend away from the trunk, 2 — toward the trunk, 3 — both |
+| `branches["branching_count"]` | Minimum and maximum number of sub-branches per branch |
+| `branches["branching_length_coef"]` | Length coefficient of sub-branches relative to the branch length |
+| `branches["grouping"]` | Minimum and maximum grouping coefficient. A value is picked per branch, and with that chance the branch spawns next to another branch |
+| `branches["compression"]` | Branch compression |
+| `branches["min_height"]` | Minimum height for branches to appear |
+| `branches["max_height_coef"]` | Maximum height coefficient for branches to appear, relative to trunk height |
 
-#### Ветки (Branches) - дополнительные параметры
-| Параметр | Описание |
-|----------|----------|
-| `branches["enable_vertical_branches_generate_leaves_only"]` | Если значение 1, то листва будет генерироваться только возле вертикальных отростков|
-| `branches["vertical_branches_count_per_branch"]` | Минимальное и максимальное количество вертикальных отростков на ветку|
-| `branches["vertical_branches_length"]` | Минимальная и максимальная длина вертикальных отростков|
-| `branches["vertical_branches_blocks"]` | Блоки для вертикальных отростков|
+#### Branches — extra parameters
+| Parameter | Description |
+|-----------|-------------|
+| `branches["enable_vertical_branches_generate_leaves_only"]` | If 1, leaves will only generate around vertical branches |
+| `branches["vertical_branches_count_per_branch"]` | Minimum and maximum number of vertical branches per branch |
+| `branches["vertical_branches_length"]` | Minimum and maximum vertical branches length |
+| `branches["vertical_branches_blocks"]` | Blocks for vertical branches |
 
-#### Листья (Leaves)
+#### Leaves
 
-| Параметр | Описание |
-|----------|----------|
-| `leaves["start_y"]` | Нижняя граница появления листвы относительно блока появления (например, при 0 листья будут генерироваться только в верхней полусфере) |
-| `leaves["end_y"]` | Аналогично, верхняя граница появления листвы относительно блока появления |
-| `leaves["start_x%"]` | Расстояние от начала ветки/ствола в процентах, где начинает генерироваться листва (0 — везде, 100 — только край) |
-| `leaves["compression"]` | Сжатие сферы листвы по вертикали (1.0 — сфера, >1 — сжата, <1 — вытянута ИЛИ ЖЕ ЕСЛИ ТАК УДОБНЕЕ от -1 до 0 — сжата, <-1 — вытянута) |
-| `leaves["algorithm"]` | Алгоритм генерации листвы (1–6, см. ниже) |
-| `leaves["quality"]` | Качество генерации (1–10). Выше — лучше, но медленнее |
+| Parameter | Description |
+|-----------|-------------|
+| `leaves["start_y"]` | Lower bound of leaves appearance relative to the spawn block (e.g. at 0, leaves only generate in the upper hemisphere) |
+| `leaves["end_y"]` | Same, but upper bound of leaves appearance relative to the spawn block |
+| `leaves["start_x%"]` | Distance from branch/trunk start in percent, where leaves begin to generate (0 — everywhere, 100 — only the very tip) |
+| `leaves["compression"]` | Vertical compression of the leaves sphere (1.0 — sphere, >1 — compressed, <1 — stretched OR, if you prefer, from -1 to 0 — compressed, <-1 — stretched) |
+| `leaves["algorithm"]` | Leaves generation algorithm (1–6, see below) |
+| `leaves["quality"]` | Generation quality (1–10). Higher value — better quality, but slower generatio, but slower |
 
-### Алгоритмы генерации листвы (`leaves["algorithm"]`)
+### Leaf Generation Algorithms (`leaves["algorithm"]`)
 
-| Значение | Описание |
-|----------|----------|
-| 1 | Простой случайный выбор |
-| 2 | Случайный, но с группировкой |
-| 3 | Чем ближе к ветке — тем выше шанс |
-| 4 | По соседями; дальше от веток|
-| 5 | По соседями; ближе к веткам (рекомендуется) |
-| 6 | Дальше от веток; улучшенный алгоритм (рекомендуется)   |
+| Value | Description |
+|-------|-------------|
+| 1 | Simple random selection |
+| 2 | Random, but with grouping |
+| 3 | The closer to the branch — the higher the chance |
+| 4 | Neighbor-based; farther from branches |
+| 5 | Neighbor-based; closer to branches (recommended) |
+| 6 | Farther from branches; improved algorithm (recommended) |
 
-## Создание пресетов
+## Creating Presets
 
-Чтобы изменить значение ползунка по умолчанию, отредактируйте соответствующий параметр:
+To change a slider's default value, edit the corresponding parameter:
 
 `trunk["min_height"] = $int(Trunk Min Height, 8, 5, 100)$`
 
-Здесь `8` — значение по умолчанию.
+Here `8` is the default value.
 
-Для параметров без ползунков достаточно изменить число прямо в коде.
+For parameters without sliders, just change the number directly in the code.
 
-## Ориентация блоков
+## Block Orientation
 
-Блоки из списка `oriented_blocks` автоматически соединяются с соседними блоками ствола, веток и листьев. Поддерживаются заборы и ограды, стеклянные панели, плиты, люки и таблички (wall_sign).
+Blocks in the `oriented_blocks` list automatically connect to adjacent trunk, branch, and leaves blocks. Supported: fences and walls, glass panes, slabs, trapdoors, and signs (wall_sign).
