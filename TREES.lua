@@ -12,14 +12,14 @@ leaves["outside_blocks"] = {blocks.azalea_leaves, blocks.short_grass}
 oriented_blocks = {blocks.spruce_fence, blocks.spruce_wall_sign}
 
 trunk["count"] = {1, 1}
-trunk["algorithm"] = 2      -- от 1 до 2
+trunk["algorithm"] = 2      --  1 - 2
 trunk["bark_density"] = 25
 trunk["gradient_mode"] = 0
-branches["algorithm"] = 2      --от 1 до 2
-branches["curve_algorithm"] = 1      --от 1 до 2
+branches["algorithm"] = 2      -- 1 - 2
+branches["curve_algorithm"] = 1      -- 1 - 2
 branches["bark_density"] = 25
 branches["gradient_mode"] = 0
-branches["convexity"] = 1      --от 1 ло 3
+branches["convexity"] = 1      -- 1 - 3
 branches["branching_count"] = {0, 1}
 branches["branching_length_coef"] = {0.4, 0.8}
 branches["grouping"] = {0.2, 0.4}
@@ -30,8 +30,8 @@ leaves["start_y"] = -100
 leaves["end_y"] = 100
 leaves["compression"] = 1.0
 leaves["start_x%"] = 0
-leaves["algorithm"] = 5     -- от 1 до 6
-leaves["quality"] = 10      --от 1 до 10
+leaves["algorithm"] = 5     --  1 - 6
+leaves["quality"] = 10      -- 1 - 10
 
 branches["enable_vertical_branches_generate_leaves_only"] = 0
 branches["vertical_branches_count_per_branch"] = {0, 0}
@@ -41,7 +41,7 @@ branches["vertical_branches_blocks"] = {blocks.oak_fence}
 
 
 
--- Ползунковые параметры
+-- Slider parameters
 trunk["min_height"] = $int(Trunk Min Height, 18, 5, 100)$
 trunk["max_height"] = $int(Trunk Max Height, 22, 3, 100)$
 trunk["min_curve"] = $int(Trunk Min Curve, 0, 0, 120)$
@@ -69,7 +69,7 @@ leaves["min_start_height"] = $int(Leaves Min Start Height, 3, 0, 30)$
 leaves["max_start_height"] = $int(Leaves Max Start Height, 3, 0, 30)$
 
 
--- Код начинается тут
+-- Code begins here
 trunk["min_count"] = trunk.count[1]
 trunk["max_count"] = trunk.count[2]
 branches["min_branching_count"] = branches["branching_count"][1]
