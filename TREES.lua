@@ -33,7 +33,7 @@ leaves["start_x%"] = 0
 leaves["algorithm"] = 5     --  1 - 6
 leaves["quality"] = 10      -- 1 - 10
 
-branches["enable_vertical_branches_generate_leaves_only"] = 0
+branches["enable_leaves_only_on_vertical_branches"] = 0
 branches["vertical_branches_count_per_branch"] = {0, 0}
 branches["vertical_branches_length"] = {1, 2}
 branches["vertical_branches_blocks"] = {blocks.oak_fence}
@@ -130,8 +130,8 @@ local function shuffle(t)
 	end
 end
 
-local function to_id(x, y, z)
-	return tostring(x) .. " " .. tostring(y) .. " " .. tostring(z)
+local function to_id(x0, y0, z0)
+	return (x0-x-1000)*2000*2000 + (y0-y-1000)*2000 + z0-z
 end
 
 local function num_sign(x)
@@ -406,7 +406,7 @@ local function generate_branches()
 				table.insert(curr_branch_main_blocks, {curr_x, curr_y, curr_z, curr_length})
                 if is_in_trunk_dict[to_id(curr_x, curr_y, curr_z)] == nil and getBlock(curr_x, curr_y, curr_z) == blocks.air then
                 _set_block(curr_x, curr_y, curr_z, branches.blocks)
-    				if branches["generate_leaves"] == 1 and branches.enable_vertical_branches_generate_leaves_only == 0 then
+    				if branches["generate_leaves"] == 1 and branches.enable_leaves_only_on_vertical_branches == 0 then
 						table.insert(branches_leaves_blocks, {curr_x, curr_y, curr_z})
     					leaves_pr[to_id(curr_x, curr_y, curr_z)] = curr_length/branch_length
     				end
@@ -453,7 +453,7 @@ local function generate_branches()
     			        local yr = curr_y + zi
                         if is_in_trunk_dict[to_id(xr, yr, zr)] == nil and getBlock(xr, yr, zr) == blocks.air then
                         _set_block(xr, yr, zr, branches.blocks)
-        					if branches["generate_leaves"] == 1 and branches.enable_vertical_branches_generate_leaves_only == 0 then
+        					if branches["generate_leaves"] == 1 and branches.enable_leaves_only_on_vertical_branches == 0 then
         						table.insert(branches_leaves_blocks, {xr, yr, zr})
         						leaves_pr[to_id(xr, yr, zr)] = curr_length/branch_length
         					end
@@ -480,7 +480,7 @@ local function generate_branches()
 							if is_in_trunk_dict[to_id(xr, yr, zr)] == nil and getBlock(xr, yr, zr) == blocks.air then
 								local temp_block = branches.outside_blocks[math.random(1, #branches.outside_blocks)]
 								set_block(xr, yr, zr, temp_block)
-								if branches["generate_leaves"] == 1 and branches.enable_vertical_branches_generate_leaves_only == 0 then
+								if branches["generate_leaves"] == 1 and branches.enable_leaves_only_on_vertical_branches == 0 then
 									table.insert(branches_leaves_blocks, {xr, yr, zr})
 									leaves_pr[to_id(xr, yr, zr)] = curr_length/branch_length
 								end
@@ -606,10 +606,10 @@ end
 
 local function generate_leaves()
     local function run_leaves_algorithm(curr_x,curr_y,curr_z,dx,dy,dz,width,real_leaves_blocks,blocks,density)
-				local temp_str = to_id(curr_x + dx, curr_y + dy, curr_z + dz)
+				local temp_id = to_id(curr_x + dx, curr_y + dy, curr_z + dz)
 				if leaves["algorithm"] == 1 then
 	                if math.random(1, 100) <= density then
-						real_leaves_blocks[temp_str] = true
+						real_leaves_blocks[temp_id] = true
 	                    local temp_block =  blocks[math.random(1, #blocks)]
 			            set_block(curr_x + dx, curr_y + dy, curr_z + dz, temp_block)
 	                end
@@ -619,13 +619,13 @@ local function generate_leaves()
 					elseif real_leaves_blocks[to_id(curr_x+dx+1,curr_y+dy,curr_z+dz)] or  real_leaves_blocks[to_id(curr_x+dx-1,curr_y+dy,curr_z+dz)] or  real_leaves_blocks[to_id(curr_x+dx,curr_y+dy+1,curr_z+dz)]
 						 or  real_leaves_blocks[to_id(curr_x+dx,curr_y+dy-1,curr_z+dz)]  or  real_leaves_blocks[to_id(curr_x+dx,curr_y+dy,curr_z+dz+1)] or  real_leaves_blocks[to_id(curr_x+dx,curr_y+dy,curr_z+dz-1)] then cb = 1/2.5 end
 	                if math.random(1, 100) <= (density/100)^cb*100  then
-						real_leaves_blocks[temp_str] = true
+						real_leaves_blocks[temp_id] = true
 						local temp_block =  blocks[math.random(1, #blocks)]
 			            set_block(curr_x + dx, curr_y + dy, curr_z + dz, temp_block)
 					end
 				elseif leaves["algorithm"] == 3 then
 					if math.random(1, 100) <= (density/100) ^ (math.max(1, (dx^2 + dy^2 + dz^2)) / width^2 * (1 - density/100) * 3) * 100  then
-						real_leaves_blocks[temp_str] = true
+						real_leaves_blocks[temp_id] = true
 	                    local temp_block =  blocks[math.random(1, #blocks)]
 			            set_block(curr_x + dx, curr_y + dy, curr_z + dz, temp_block)
 					end
@@ -649,7 +649,7 @@ local function generate_leaves()
 					chance = rel_sum(chance, (density/100)^3*100, 100)
 
 					if math.random(0, 100) <= chance  then
-						real_leaves_blocks[temp_str] = true
+						real_leaves_blocks[temp_id] = true
 						local temp_block =  blocks[math.random(1, #blocks)]
 			            set_block(curr_x + dx, curr_y + dy, curr_z + dz, temp_block)
 					end
@@ -673,15 +673,15 @@ local function generate_leaves()
 					chance = rel_sum(chance, (density/100)^3*100, 100)
 
 					if math.random(0, 100) <= chance  then
-						real_leaves_blocks[temp_str] = true
+						real_leaves_blocks[temp_id] = true
 						local temp_block =  blocks[math.random(1, #blocks)]
 			            set_block(curr_x + dx, curr_y + dy, curr_z + dz, temp_block)
 					end
 				elseif leaves["algorithm"] == 6 then
-					local temp_str = to_id(curr_x + dx, curr_y + dy, curr_z + dz)
-					if alg6[temp_str] == nil then alg6[temp_str] = {0, 0} end
-					alg6[temp_str][1] = alg6[temp_str][1] + (dx^2 + dy^2 + dz^2)/width^2 - 0.3
-					alg6[temp_str][2] = alg6[temp_str][2] + 1
+					local temp_id = to_id(curr_x + dx, curr_y + dy, curr_z + dz)
+					if alg6[temp_id] == nil then alg6[temp_id] = {0, 0} end
+					alg6[temp_id][1] = alg6[temp_id][1] + (dx^2 + dy^2 + dz^2)/width^2 - 0.3
+					alg6[temp_id][2] = alg6[temp_id][2] + 1
 			    end
 
 			end
@@ -745,15 +745,15 @@ local function generate_leaves()
     			if _%10 > leaves["quality"] then goto continue end
                 local dx, dy, dz = coord[1], coord[2], coord[3]
                 local temp = {curr_x + dx, curr_y + dy, curr_z + dz}
-    			local temp_str = to_id(curr_x + dx, curr_y + dy, curr_z + dz)
+    			local temp_id = to_id(curr_x + dx, curr_y + dy, curr_z + dz)
 
                 local is_in_leaves = false
-                if solid_blocks[temp_str] ~= nil then is_in_leaves = true end
+                if solid_blocks[temp_id] ~= nil then is_in_leaves = true end
     			if leaves_pr[to_id(curr_x, curr_y, curr_z)] <  leaves["start_x%"] /100 or not (dy - math.random(-0.5,0.5) >= leaves["start_y"]) or not (dy + math.random(-0.5,0.5) <= leaves["end_y"]) then goto continue end
-    			solid_blocks[temp_str] = true
+    			solid_blocks[temp_id] = true
 
     			if leaves["algorithm"] == 6 then
-    			    indx[temp_str] = temp
+    			    indx[temp_id] = temp
     			end
 
                 if getBlock(curr_x + dx, curr_y + dy, curr_z + dz) == blocks.air and not is_in_leaves and curr_y + dy - y>= leaves.min_height then
@@ -785,14 +785,14 @@ local function generate_leaves()
 				if _%10 > leaves["quality"] then goto continue end
 	            local dx, dy, dz = coord[1], coord[2], coord[3]
 	            local temp = {curr_x + dx, curr_y + dy, curr_z + dz}
-				local temp_str = to_id(curr_x + dx, curr_y + dy, curr_z + dz)
+				local temp_id = to_id(curr_x + dx, curr_y + dy, curr_z + dz)
 	            local is_in_leaves = false
-	            if outside_leaves_blocks[temp_str] ~= nil or solid_blocks[temp_str] ~= nil then is_in_leaves = true end
+	            if outside_leaves_blocks[temp_id] ~= nil or solid_blocks[temp_id] ~= nil then is_in_leaves = true end
 				if leaves_pr[to_id(curr_x, curr_y, curr_z)] <  leaves["start_x%"] /100 or not (dy - math.random(-0.5,0.5) >= leaves["start_y"]) or not (dy + math.random(-0.5,0.5) <= leaves["end_y"]) then goto continue end
-				outside_leaves_blocks[temp_str] = true
+				outside_leaves_blocks[temp_id] = true
 
     			if leaves["algorithm"] == 6 then
-    			    indx[temp_str] = temp
+    			    indx[temp_id] = temp
     			end
 
 	            if getBlock(curr_x + dx, curr_y + dy, curr_z + dz) == blocks.air and not is_in_leaves and curr_y + dy - y>= leaves.min_height then
@@ -832,7 +832,7 @@ if oriented_blocks ~= nil then
 end
 
 for _, v in pairs(blocks_to_orient) do
-	x, y, z = v[1], v[2], v[3]
+	local x, y, z = v[1], v[2], v[3]
 	local east = "east=false"
 	local west = "west=false"
 	local north = "north=false"

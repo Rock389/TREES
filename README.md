@@ -105,7 +105,7 @@ Some parameters are in the code, others are sliders. If you add too many sliders
 #### Branches — extra parameters
 | Parameter | Description |
 |-----------|-------------|
-| `branches["enable_vertical_branches_generate_leaves_only"]` | If 1, leaves will only generate around vertical branches |
+| `branches["enable_leaves_only_on_vertical_branches"]` | If 1, leaves will only generate around vertical branches |
 | `branches["vertical_branches_count_per_branch"]` | Minimum and maximum number of vertical branches per branch |
 | `branches["vertical_branches_length"]` | Minimum and maximum vertical branches length |
 | `branches["vertical_branches_blocks"]` | Blocks for vertical branches |
