@@ -1,4 +1,4 @@
-# TREES 4.0.0
+# TREES 4.0.1
 [Русская версия](README.ru.md)
 
 A Lua script for Axiom that generates highly configurable trees.
